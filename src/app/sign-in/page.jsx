@@ -6,62 +6,64 @@ import { Mail, Lock } from "lucide-react";
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen bg-[#050510]">
-      <div className="grid min-h-screen lg:grid-cols-2">
-        
-        {/* Left Side */}
-        <div className="relative hidden lg:flex items-center justify-center overflow-hidden">
-          <div className="absolute h-[500px] w-[500px] rounded-full bg-violet-600/30 blur-[150px]" />
+    <div className="min-h-screen bg-gradient-to-br from-[#050510] via-[#0b0b1a] to-[#0a0a14] flex items-center justify-center px-4 ">
+      <div className="grid w-full max-w-6xl lg:grid-cols-2 rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
 
-          <div className="relative z-10 max-w-lg px-10">
-            <h1 className="text-6xl font-bold text-white">
-              Welcome Back to Your Career Journey
+        {/* Left Side */}
+        <div className="relative hidden lg:flex flex-col justify-center p-12 bg-white/5 backdrop-blur-2xl">
+          <div className="absolute inset-0">
+            <div className="absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/20 blur-[140px]" />
+            <div className="absolute bottom-0 right-0 h-[300px] w-[300px] rounded-full bg-indigo-500/20 blur-[120px]" />
+          </div>
+
+          <div className="relative z-10">
+            <h1 className="text-5xl font-bold text-white leading-tight">
+              Welcome Back
+              <br />
+              Continue Your Journey
             </h1>
 
-            <p className="mt-6 text-lg text-gray-400">
-              Continue your journey and discover new
-              career opportunities tailored for you.
+            <p className="mt-6 text-gray-400 text-lg">
+              Discover opportunities tailored for your skills and grow your career
+              with thousands of companies.
             </p>
 
             <div className="mt-10 grid grid-cols-2 gap-4">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-                <h3 className="text-3xl font-bold text-white">
-                  50K+
-                </h3>
-                <p className="text-gray-400">
-                  Active Jobs
-                </p>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition">
+                <h3 className="text-3xl font-bold text-white">50K+</h3>
+                <p className="text-gray-400 text-sm">Active Jobs</p>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-                <h3 className="text-3xl font-bold text-white">
-                  12K+
-                </h3>
-                <p className="text-gray-400">
-                  Companies
-                </p>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition">
+                <h3 className="text-3xl font-bold text-white">12K+</h3>
+                <p className="text-gray-400 text-sm">Companies</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Right Side */}
-        <div className="flex items-center justify-center px-6">
-          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
-            
+        <div className="flex items-center justify-center p-8 bg-black/30 backdrop-blur-xl">
+          <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl">
+
             <h2 className="text-4xl font-bold text-white">
               Sign In
             </h2>
 
             <p className="mt-2 text-gray-400">
-              Access your account
+              Welcome back, please login to your account
             </p>
 
-            <div className="mt-8 space-y-5">
+            <div className="mt-8 flex flex-col gap-5">
+
               <Input
                 label="Email"
                 placeholder="john@example.com"
                 startContent={<Mail size={18} />}
+                classNames={{
+                  inputWrapper: "bg-white/5 border border-white/10",
+                  input: "text-white placeholder:text-gray-500"
+                }}
               />
 
               <Input
@@ -69,12 +71,16 @@ export default function SignInPage() {
                 label="Password"
                 placeholder="••••••••"
                 startContent={<Lock size={18} />}
+                classNames={{
+                  inputWrapper: "bg-white/5 border border-white/10",
+                  input: "text-white placeholder:text-gray-500"
+                }}
               />
 
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-violet-400"
+                  className="text-sm text-violet-400 hover:text-violet-300 transition"
                 >
                   Forgot Password?
                 </Link>
@@ -82,7 +88,7 @@ export default function SignInPage() {
 
               <Button
                 size="lg"
-                className="w-full bg-violet-600"
+                className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition"
               >
                 Sign In
               </Button>
@@ -90,23 +96,22 @@ export default function SignInPage() {
               <Button
                 variant="bordered"
                 size="lg"
-                className="w-full border-white/10"
+                className="w-full border-white/10 text-white hover:bg-white/5 transition"
               >
                 Continue with Google
               </Button>
+
             </div>
 
-            <p className="mt-6 text-center text-gray-400">
-              Dont have an account?{" "}
-              <Link
-                href="/signup"
-                className="text-violet-400"
-              >
+            <p className="mt-6 text-center text-gray-400 text-sm">
+              Don’t have an account?{" "}
+              <Link href="/sign-up" className="text-violet-400 hover:text-violet-300">
                 Sign Up
               </Link>
             </p>
           </div>
         </div>
+
       </div>
     </div>
   );
