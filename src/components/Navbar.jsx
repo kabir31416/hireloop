@@ -2,9 +2,28 @@
 
 import { useState } from "react";
 import { Button, Link } from "@heroui/react";
+import { authClient, useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const { data: session, isPending } = useSession();
+
+    const user = session?.user;
+
+    const router = useRouter();
+
+    const handleSignOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    router.refresh(); // update session
+                    router.push("/");
+                },
+            },
+        });
+    };
 
     return (
         <nav>
@@ -44,17 +63,39 @@ export default function Navbar() {
                             </Link>
                         </div>
 
-                        <div>|</div>
-
 
                         {/* Desktop Actions */}
-                        <div className="hidden md:flex items-center gap-5">
-                            <Link
-                                href="/sign-in"
-                                className="text-sm text-indigo-400 hover:text-indigo-300"
-                            >
-                                Sign In
-                            </Link>
+                        <div className="hidden md:flex items-center">
+
+
+                            {
+                                user ? (
+                                    <>
+                                        Hi, {user.name}!
+                                        <Button
+                                            onClick={handleSignOut}
+                                            variant="ghost"
+                                            color="secondary"
+                                            radius="lg"
+                                        >
+                                            Sign Out
+                                        </Button>
+
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link href="/sign-in">
+                                            <Button
+                                                variant="ghost"
+                                                color="secondary"
+                                                radius="lg">
+                                                Sign In
+                                            </Button>
+                                        </Link>
+
+                                    </>
+                                )
+                            }
 
                             <Button
                                 color="secondary"
