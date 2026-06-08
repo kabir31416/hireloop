@@ -3,10 +3,44 @@
 import Link from "next/link";
 import { Button, Input } from "@heroui/react";
 import { Mail, Lock } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
 
 export default function SignInPage() {
+
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe: true,
+        callbackURL: "/dashboard",
+      });
+
+      if (error) {
+        console.log(error);
+        alert(error.message || "Login failed!");
+        return;
+      }
+
+      console.log("Login success:", data);
+      alert("Login successful!");
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong!");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#050510] via-[#0b0b1a] to-[#0a0a14] flex items-center justify-center px-4 ">
+    <div className="min-h-screen bg-linear-to-br from-[#050510] via-[#0b0b1a] to-[#0a0a14] flex items-center justify-center px-4 ">
       <div className="grid w-full max-w-6xl lg:grid-cols-2 rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
 
         {/* Left Side */}
@@ -54,54 +88,62 @@ export default function SignInPage() {
               Welcome back, please login to your account
             </p>
 
-            <div className="mt-8 flex flex-col gap-5">
+            <form onSubmit={handleSignIn} className="mt-8 space-y-6">
+              <div className="mt-8 flex flex-col gap-5">
 
-              <Input
-                label="Email"
-                placeholder="john@example.com"
-                startContent={<Mail size={18} />}
-                classNames={{
-                  inputWrapper: "bg-white/5 border border-white/10",
-                  input: "text-white placeholder:text-gray-500"
-                }}
-              />
+                <Input
+                  label="Email"
+                  placeholder="john@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  startContent={<Mail size={18} />}
+                  classNames={{
+                    inputWrapper: "bg-white/5 border border-white/10",
+                    input: "text-white placeholder:text-gray-500"
+                  }}
+                />
 
-              <Input
-                type="password"
-                label="Password"
-                placeholder="••••••••"
-                startContent={<Lock size={18} />}
-                classNames={{
-                  inputWrapper: "bg-white/5 border border-white/10",
-                  input: "text-white placeholder:text-gray-500"
-                }}
-              />
+                <Input
+                  type="password"
+                  label="Password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  startContent={<Lock size={18} />}
+                  classNames={{
+                    inputWrapper: "bg-white/5 border border-white/10",
+                    input: "text-white placeholder:text-gray-500"
+                  }}
+                />
 
-              <div className="flex justify-end">
-                <Link
-                  href="/forgot-password"
-                  className="text-sm text-violet-400 hover:text-violet-300 transition"
+                <div className="flex justify-end">
+                  <Link
+                    href="/forgot-password"
+                    className="text-sm text-violet-400 hover:text-violet-300 transition"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  isLoading={loading}
+                  className="w-full bg-linear-to-r from-violet-600 to-indigo-600 text-white"
                 >
-                  Forgot Password?
-                </Link>
+                  {loading ? "Signing in..." : "Sign In"}
+                </Button>
+
+                <Button
+                  variant="bordered"
+                  size="lg"
+                  className="w-full border-white/10 text-white hover:bg-white/5 transition"
+                >
+                  Continue with Google
+                </Button>
+
               </div>
-
-              <Button
-                size="lg"
-                className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition"
-              >
-                Sign In
-              </Button>
-
-              <Button
-                variant="bordered"
-                size="lg"
-                className="w-full border-white/10 text-white hover:bg-white/5 transition"
-              >
-                Continue with Google
-              </Button>
-
-            </div>
+            </form>
 
             <p className="mt-6 text-center text-gray-400 text-sm">
               Don’t have an account?{" "}

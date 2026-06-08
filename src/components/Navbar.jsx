@@ -50,7 +50,7 @@ export default function Navbar() {
                         {/* Desktop Actions */}
                         <div className="hidden md:flex items-center gap-5">
                             <Link
-                                href="#"
+                                href="/sign-in"
                                 className="text-sm text-indigo-400 hover:text-indigo-300"
                             >
                                 Sign In

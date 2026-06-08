@@ -3,10 +3,67 @@
 import Link from "next/link";
 import { Button, Input } from "@heroui/react";
 import { Mail, Lock, User } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
+
+
 
 export default function SignUpPage() {
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSignUp = async (e) => {
+  e.preventDefault();
+
+  // Empty field check
+  if (!name || !email || !password || !confirmPassword) {
+    alert("Please fill all fields!");
+    return;
+  }
+
+  // Password check
+  if (password !== confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  try {
+    const { data, error } = await authClient.signUp.email({
+      name,
+      email,
+      password,
+    });
+
+    // Better Auth Error
+    if (error) {
+      alert(error.message || "Sign up failed!");
+      console.log(error);
+      return;
+    }
+
+    // Success
+    alert("Account created successfully!");
+    console.log(data);
+
+
+    setName("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+
+
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong!");
+  }
+};
+
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#050510] via-[#0b0b1a] to-[#0a0a14] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-linear-to-br from-[#050510] via-[#0b0b1a] to-[#0a0a14] flex items-center justify-center px-4 py-12">
 
       <div className="grid w-full max-w-6xl lg:grid-cols-2 rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
 
@@ -58,66 +115,78 @@ export default function SignUpPage() {
               Create your account to get started
             </p>
 
-            <div className="mt-8 flex flex-col gap-5">
+            <form onSubmit={handleSignUp} className="mt-6 space-y-6">
 
-              <Input
-                label="Full Name"
-                placeholder="John Doe"
-                startContent={<User size={18} />}
-                classNames={{
-                  inputWrapper: "bg-white/5 border border-white/10",
-                  input: "text-white placeholder:text-gray-500"
-                }}
-              />
+              <div className="mt-8 flex flex-col gap-5">
 
-              <Input
-                label="Email"
-                placeholder="john@example.com"
-                startContent={<Mail size={18} />}
-                classNames={{
-                  inputWrapper: "bg-white/5 border border-white/10",
-                  input: "text-white placeholder:text-gray-500"
-                }}
-              />
+                <Input
+                  label="Full Name"
+                  type="text"
+                  placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  startContent={<User size={18} />}
+                  classNames={{
+                    inputWrapper: "bg-white/5 border border-white/10",
+                    input: "text-white placeholder:text-gray-500"
+                  }}
+                />
 
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                startContent={<Lock size={18} />}
-                classNames={{
-                  inputWrapper: "bg-white/5 border border-white/10",
-                  input: "text-white placeholder:text-gray-500"
-                }}
-              />
+                <Input
+                  label="Email"
+                  type="email"
+                  placeholder="john@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  startContent={<Mail size={18} />}
+                  classNames={{
+                    inputWrapper: "bg-white/5 border border-white/10",
+                    input: "text-white placeholder:text-gray-500"
+                  }}
+                />
 
-              <Input
-                label="Confirm Password"
-                type="password"
-                placeholder="••••••••"
-                startContent={<Lock size={18} />}
-                classNames={{
-                  inputWrapper: "bg-white/5 border border-white/10",
-                  input: "text-white placeholder:text-gray-500"
-                }}
-              />
+                <Input
+                  label="Password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  startContent={<Lock size={18} />}
+                  classNames={{
+                    inputWrapper: "bg-white/5 border border-white/10",
+                    input: "text-white placeholder:text-gray-500"
+                  }}
+                />
 
-              <Button
-                size="lg"
-                className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition"
-              >
-                Create Account
-              </Button>
+                <Input
+                  label="Confirm Password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  startContent={<Lock size={18} />}
+                  classNames={{
+                    inputWrapper: "bg-white/5 border border-white/10",
+                    input: "text-white placeholder:text-gray-500"
+                  }}
+                />
 
-              <Button
-                variant="bordered"
-                size="lg"
-                className="w-full border-white/10 text-white hover:bg-white/5 transition"
-              >
-                Continue with Google
-              </Button>
+                <Button type="submit" size="lg" className="w-full bg-linear-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition"
+                >
+                  Create Account
+                </Button>
 
-            </div>
+                <Button
+                  variant="bordered"
+                  size="lg"
+                  className="w-full border-white/10 text-white hover:bg-white/5 transition"
+                >
+                  Continue with Google
+                </Button>
+
+              </div>
+
+            </form>
 
             <p className="mt-6 text-center text-gray-400 text-sm">
               Already have an account?{" "}
