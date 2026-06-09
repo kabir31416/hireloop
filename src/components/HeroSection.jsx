@@ -8,9 +8,11 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { motion } from "motion/react";
+
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#050510] pt-40 pb-32">
+    <section className="relative overflow-hidden bg-[#050510] pt-20 pb-20">
       
       {/* Background Glow */}
       <div className="absolute left-1/2 top-20 h-125 w-125 -translate-x-1/2 rounded-full bg-violet-600/30 blur-[120px]" />
@@ -29,7 +31,10 @@ export default function HeroSection() {
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2 text-sm text-violet-300">
               <Sparkles size={16} />
-              AI-Powered Career Platform
+
+              <motion.p animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }}>
+                AI-Powered Career Platform
+              </motion.p>
             </div>
 
             <h1 className="text-5xl font-bold leading-tight text-white md:text-7xl">

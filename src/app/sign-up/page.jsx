@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button, Input } from "@heroui/react";
+import { Button, Input, Label, ListBox, Select } from "@heroui/react";
 import { Mail, Lock, User } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
@@ -13,53 +13,47 @@ export default function SignUpPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("seeker");
 
   const handleSignUp = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Empty field check
-  if (!name || !email || !password || !confirmPassword) {
-    alert("Please fill all fields!");
-    return;
-  }
-
-  // Password check
-  if (password !== confirmPassword) {
-    alert("Passwords do not match!");
-    return;
-  }
-
-  try {
-    const { data, error } = await authClient.signUp.email({
-      name,
-      email,
-      password,
-    });
-
-    // Better Auth Error
-    if (error) {
-      alert(error.message || "Sign up failed!");
-      console.log(error);
+    // Empty field check
+    if (!name || !email || !password) {
+      alert("Please fill all fields!");
       return;
     }
 
-    // Success
-    alert("Account created successfully!");
-    console.log(data);
+    try {
+      const { data, error } = await authClient.signUp.email({
+        name,
+        email,
+        role,
+        password,
+      });
+
+      // Better Auth Error
+      if (error) {
+        alert(error.message || "Sign up failed!");
+        console.log(error);
+        return;
+      }
+
+      // Success
+      alert("Account created successfully!");
+      console.log(data);
 
 
-    setName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
+      setName("");
+      setEmail("");
+      setPassword("");
 
 
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong!");
-  }
-};
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong!");
+    }
+  };
 
 
   return (
@@ -115,10 +109,13 @@ export default function SignUpPage() {
               Create your account to get started
             </p>
 
-            <form onSubmit={handleSignUp} className="mt-6 space-y-6">
+            <form onSubmit={handleSignUp} className="mt-6">
 
-              <div className="mt-8 flex flex-col gap-5">
+              <div className="mt-8 flex flex-col gap-2">
 
+                <Label htmlFor="name" className="text-sm font-medium text-gray-300">
+                  Full Name
+                </Label>
                 <Input
                   label="Full Name"
                   type="text"
@@ -132,6 +129,9 @@ export default function SignUpPage() {
                   }}
                 />
 
+                <Label htmlFor="email" className="text-sm font-medium text-gray-300">
+                  Email
+                </Label>
                 <Input
                   label="Email"
                   type="email"
@@ -145,6 +145,9 @@ export default function SignUpPage() {
                   }}
                 />
 
+                <Label htmlFor="password" className="text-sm font-medium text-gray-300">
+                  Password
+                </Label>
                 <Input
                   label="Password"
                   type="password"
@@ -158,18 +161,29 @@ export default function SignUpPage() {
                   }}
                 />
 
-                <Input
-                  label="Confirm Password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  startContent={<Lock size={18} />}
-                  classNames={{
-                    inputWrapper: "bg-white/5 border border-white/10",
-                    input: "text-white placeholder:text-gray-500"
-                  }}
-                />
+                <Select onChange={(value) => setRole(value)} placeholder="Select Role" name="role" defaultValue="seeker">
+                  <lebel className="text-sm font-medium text-gray-300 mb-1">
+                    Role
+                  </lebel>
+                  <Select.Trigger>
+                    <Select.Value />
+                    <Select.Indicator />
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      <ListBox.Item id="seeker" textValue="Job Seeker">
+                        Job Seeker
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+
+                      <ListBox.Item id="recruiter" textValue="Recruiter">
+                        Recruiter
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
 
                 <Button type="submit" size="lg" className="w-full bg-linear-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition"
                 >
